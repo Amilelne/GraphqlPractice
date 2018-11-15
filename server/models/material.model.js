@@ -2,16 +2,21 @@ const { conf } = require('../config');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const materialSchema = new Schema({
-  name: {
-    type: String,
-    required: true
+const materialSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true
+    },
+    recipes: {
+      type: [Schema.Types.ObjectId],
+      required: false
+    }
   },
-  recipes: {
-    type: [Schema.Types.ObjectId],
-    required: false
+  {
+    versionKey: false
   }
-});
+);
 
 const name = conf('collections.material');
 exports.materialSchema = materialSchema;
