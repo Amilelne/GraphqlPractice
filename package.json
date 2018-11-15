@@ -1,0 +1,22 @@
+{
+  "name": "graphql-server-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@okgrow/graphql-scalars": "^0.4.2",
+    "apollo-server": "^2.2.2",
+    "fs": "0.0.1-security",
+    "graphql": "^14.0.2",
+    "lodash": "^4.17.11",
+    "mongoose": "^5.3.12",
+    "path": "^0.12.7",
+    "properties": "^1.2.1"
+  }
+}

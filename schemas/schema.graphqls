@@ -1,0 +1,85 @@
+# custom scalar type
+scalar DateTime
+# custom url link
+scalar URL
+
+type Query {
+  # print the name of application, whatever you want
+  appName: String!
+
+  # recipe
+  recipes: [Recipe]! # get all
+  recipe(id: ID!): Recipe! # get by id
+  # materials
+  materials: [Material]! # get all
+  material(id: ID!): Material! # get by id
+}
+
+type Mutation {
+  # recipe
+  addRecipe(data: CreateRecipeInput!): Recipe!
+  updateRecipe(id: ID!, data: UpdateRecipeInput!): Recipe!
+  deleteRecipe(id: ID!): Recipe!
+
+  # materials
+  addMaterial(data: CreateMaterialInput!): Material!
+  updateMaterial(id: ID!, data: UpdateMaterialInput!): Material!
+  deleteMaterial(id: ID!): Material!
+}
+
+type Recipe {
+  id: ID!
+  # from 6 to 255 characters
+  title: String!
+  description: String!
+  # image url
+  image: URL!
+  # from 1 to 5, default is 1
+  difficult: Int!
+
+  # relationship with materials
+  materials: [Material]!
+
+  # timestamp
+  createDate: DateTime!
+  updateDate: DateTime!
+}
+
+type Material {
+  id: ID!
+  name: String!
+
+  # relationship with recipes
+  recipes: [Recipe]!
+}
+
+# input types
+# recipe
+input CreateRecipeInput {
+  title: String!
+  description: String!
+  image: URL!
+  difficult: Int
+
+  # input list of materials id
+  material: [ID]
+}
+
+input UpdateRecipeInput {
+  title: String
+  description: String
+  image: URL
+  difficult: Int
+
+  # input list of materials id
+  material: [ID]
+}
+
+# material
+input CreateMaterialInput {
+  name: String!
+}
+
+input UpdateMaterialInput {
+  name: String
+}
