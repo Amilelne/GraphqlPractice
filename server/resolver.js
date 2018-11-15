@@ -39,14 +39,41 @@ const resolverMap = {
       });
     },
     updateRecipe: (_, args) => {
-      Recipe.update({ id: args.id }, args.data);
+      let newMaterials = args.data.materials;
+      if (newMaterials) {
+        Recipe.findById(args.id, function(err, doc) {
+          let oldMaterials = doc.materials;
+          // Add new material, update the recipes in Material
+          newMaterials.forEach(newMaterialId => {
+            if (oldMaterials.indexOf(newMaterialId) == -1) {
+              Material.findById(newMaterialId, function(err, doc) {
+                doc.recipes.push(args.id);
+                doc.save();
+              });
+            }
+          });
+          // Delete old material, update the recipes in Material
+          oldMaterials.forEach(oldMaterialId => {
+            if (newMaterials.indexOf(oldMaterialId) == -1) {
+              Material.findById(oldMaterialId, function(err, doc) {
+                let index = doc.recipes.indexOf(args.id);
+                if (index >= 0) {
+                  doc.recipes.splice(index, 1);
+                  doc.save();
+                }
+              });
+            }
+          });
+        });
+      }
+      Recipe.updateOne({ _id: args.id }, args.data, function(err, doc) {
+        if (err) console.log(err);
+      });
       return Recipe.findById(args.id);
     },
     deleteRecipe: (_, args) => {
-      console.log(args.id);
-      Recipe.deleteOne({ id: args.id }, function(err) {
+      Recipe.deleteOne({ _id: args.id }, function(err) {
         if (err) console.log(err);
-        else console.log('success');
       });
       return 'success';
     },
