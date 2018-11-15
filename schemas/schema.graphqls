@@ -24,7 +24,7 @@ type Mutation {
   # materials
   addMaterial(data: CreateMaterialInput!): Material!
   updateMaterial(id: ID!, data: UpdateMaterialInput!): Material!
-  deleteMaterial(id: ID!): Material!
+  deleteMaterial(id: ID!): String!
 }
 
 type Recipe {

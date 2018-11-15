@@ -34,7 +34,7 @@ const resolverMap = {
             doc.save();
           });
         });
-        // Search for update recipe
+        // Search for updated recipe
         return Recipe.findById(recipe.id);
       });
     },
@@ -72,15 +72,53 @@ const resolverMap = {
       return Recipe.findById(args.id);
     },
     deleteRecipe: (_, args) => {
+      // Firstly, delete the recipe in Material
+      Recipe.findById(args.id, function(err, doc) {
+        if (err) console.log(err);
+        let materials = doc.materials;
+        materials.forEach(materialId => {
+          Material.findById(materialId, function(err, doc) {
+            let index = doc.recipes.indexOf(args.id);
+            doc.recipes.splice(index, 1);
+            doc.save();
+          });
+        });
+      });
+      // Secondly, safely delete the recipe
       Recipe.deleteOne({ _id: args.id }, function(err) {
         if (err) console.log(err);
       });
       return 'success';
     },
     // materials
-    addMaterial() {},
-    updateMaterial() {},
-    deleteMaterial() {}
+    addMaterial: (_, args) => {
+      // Create new Material
+      return Material.create(args.data);
+    },
+    updateMaterial: (_, args) => {
+      // Update Material
+      Material.updateOne({ _id: args.id }, args.data);
+      return Material.findById(args.id);
+    },
+    deleteMaterial: async (_, args) => {
+      // Firstly, delete the material in Recipe
+      await Material.findById(args.id, function(err, doc) {
+        let recipes = doc.recipes;
+        recipes.forEach(recipeId => {
+          Recipe.findById(recipeId, function(err, doc) {
+            if (err) console.log(err);
+            let index = doc.materials.indexOf(args.id);
+            doc.materials.splice(index, 1);
+            doc.save();
+          });
+        });
+      });
+      // Secondly, safely delete the material
+      await Material.deleteOne({ _id: args.id }, function(err, doc) {
+        if (err) console.log(err);
+      });
+      return 'success';
+    }
   },
   Recipe: {
     materials: recipe => {
