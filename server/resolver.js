@@ -23,9 +23,33 @@ const resolverMap = {
   },
   Mutation: {
     // recipe
-    addRecipe() {},
-    updateRecipe() {},
-    deleteRecipe() {},
+    addRecipe: (_, args) => {
+      // Create new recipe
+      return Recipe.create(args.data).then(recipe => {
+        // Add new recipe to Material
+        let materials = recipe.materials;
+        materials.forEach(materialId => {
+          Material.findById(materialId, function(err, doc) {
+            doc.recipes.push(recipe.id);
+            doc.save();
+          });
+        });
+        // Search for update recipe
+        return Recipe.findById(recipe.id);
+      });
+    },
+    updateRecipe: (_, args) => {
+      Recipe.update({ id: args.id }, args.data);
+      return Recipe.findById(args.id);
+    },
+    deleteRecipe: (_, args) => {
+      console.log(args.id);
+      Recipe.deleteOne({ id: args.id }, function(err) {
+        if (err) console.log(err);
+        else console.log('success');
+      });
+      return 'success';
+    },
     // materials
     addMaterial() {},
     updateMaterial() {},

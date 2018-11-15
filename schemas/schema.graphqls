@@ -19,7 +19,7 @@ type Mutation {
   # recipe
   addRecipe(data: CreateRecipeInput!): Recipe!
   updateRecipe(id: ID!, data: UpdateRecipeInput!): Recipe!
-  deleteRecipe(id: ID!): Recipe!
+  deleteRecipe(id: ID!): String!
 
   # materials
   addMaterial(data: CreateMaterialInput!): Material!
@@ -62,7 +62,7 @@ input CreateRecipeInput {
   difficult: Int
 
   # input list of materials id
-  material: [ID]
+  materials: [ID]
 }
 
 input UpdateRecipeInput {
@@ -72,7 +72,7 @@ input UpdateRecipeInput {
   difficult: Int
 
   # input list of materials id
-  material: [ID]
+  materials: [ID]
 }
 
 # material
