@@ -85,10 +85,13 @@ const resolverMap = {
         });
       });
       // Secondly, safely delete the recipe
-      Recipe.deleteOne({ _id: args.id }, function(err) {
-        if (err) console.log(err);
-      });
-      return 'success';
+      return Recipe.findByIdAndDelete(args.id)
+        .then(doc => {
+          return doc;
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     // materials
     addMaterial: (_, args) => {
@@ -114,10 +117,13 @@ const resolverMap = {
         });
       });
       // Secondly, safely delete the material
-      await Material.deleteOne({ _id: args.id }, function(err, doc) {
-        if (err) console.log(err);
-      });
-      return 'success';
+      return Material.findByIdAndDelete(args.id)
+        .then(doc => {
+          return doc;
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   },
   Recipe: {

@@ -19,12 +19,12 @@ type Mutation {
   # recipe
   addRecipe(data: CreateRecipeInput!): Recipe!
   updateRecipe(id: ID!, data: UpdateRecipeInput!): Recipe!
-  deleteRecipe(id: ID!): String!
+  deleteRecipe(id: ID!): Recipe!
 
   # materials
   addMaterial(data: CreateMaterialInput!): Material!
   updateMaterial(id: ID!, data: UpdateMaterialInput!): Material!
-  deleteMaterial(id: ID!): String!
+  deleteMaterial(id: ID!): Material!
 }
 
 type Recipe {
