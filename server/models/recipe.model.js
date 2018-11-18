@@ -1,8 +1,8 @@
 const { conf } = require('../config');
-const mongoose = require('mongoose');
+const mongoose = require('../mongoose');
 const Schema = mongoose.Schema;
 
-const recipeSchema = new Schema(
+const schema = new Schema(
   {
     title: {
       type: String,
@@ -20,28 +20,30 @@ const recipeSchema = new Schema(
     },
     difficult: {
       type: Number,
-      required: true
+      required: false,
+      default: 1,
+      min: 1,
+      max: 5
     },
     materials: {
       type: [Schema.Types.ObjectId],
-      required: true
-    },
-    createDate: {
-      type: Date,
-      required: true,
-      default: Date.now()
-    },
-    updateDate: {
-      type: Date,
-      required: true,
-      default: Date.now()
+      required: false,
+      default: []
     }
   },
   {
+    timestamps: { createdAt: 'createDate', updatedAt: 'updateDate' },
     versionKey: false
   }
 );
 
+// Middleware
+schema.pre('save', async function() {
+  const { Material } = require('./material.model');
+  if (this.isModified('materials')) {
+    const materials = await Material.find({ _id: { $in: this.materials } });
+    this.materials = materials.map(m => m._id);
+  }
+});
 const name = conf('collections.recipe');
-exports.recipeSchema = recipeSchema;
-exports.Recipe = mongoose.model(name, recipeSchema, name);
+exports.Recipe = mongoose.model(name, schema, name);

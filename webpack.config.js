@@ -1,4 +1,5 @@
 const path = require('path');
+const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
   entry: './server/index.js',
@@ -8,6 +9,7 @@ module.exports = {
   },
   mode: 'development',
   target: 'node',
+  externals: [nodeExternals()],
   module: {
     rules: [{ test: /.graphqls$/, loader: 'raw-loader' }]
   }

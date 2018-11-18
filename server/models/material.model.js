@@ -1,16 +1,12 @@
 const { conf } = require('../config');
-const mongoose = require('mongoose');
+const mongoose = require('../mongoose');
 const Schema = mongoose.Schema;
 
-const materialSchema = new Schema(
+const schema = new Schema(
   {
     name: {
       type: String,
       required: true
-    },
-    recipes: {
-      type: [Schema.Types.ObjectId],
-      required: false
     }
   },
   {
@@ -18,6 +14,14 @@ const materialSchema = new Schema(
   }
 );
 
+// Material
+schema.pre('remove', async function() {
+  console.log('trigger remove');
+  const { Recipe } = require('./recipe.model');
+  await Recipe.updateMany(
+    { materials: this.id },
+    { $pull: { materials: this._id } }
+  );
+});
 const name = conf('collections.material');
-exports.materialSchema = materialSchema;
-exports.Material = mongoose.model(name, materialSchema, name);
+exports.Material = mongoose.model(name, schema, name);
