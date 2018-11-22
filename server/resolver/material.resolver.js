@@ -7,8 +7,12 @@ const resolverMap = {
     }
   },
   Query: {
-    materials: async () => Material.find(),
-    material: async (_, { id }) => Material.findForOp(id)
+    materials: async (_, args, context, info) => {
+      return Material.find();
+    },
+    material: async (_, { id }, context, info) => {
+      return Material.findForOp(id);
+    }
   },
   Mutation: {
     // materials

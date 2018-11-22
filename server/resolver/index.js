@@ -6,7 +6,10 @@ const resolverMap = {
   DateTime,
   URL,
   Query: {
-    appName: async () => 'I love cooking!'
+    appName: async (_, args, context, info) => {
+      console.log('Query.appName - info : ', JSON.stringify(info));
+      return 'I love cooking!';
+    }
   }
 };
 

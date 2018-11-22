@@ -2,6 +2,7 @@ const { configure } = require('./config');
 const { omit } = require('lodash');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
+const graphqlFields = require('graphql-fields');
 
 const { mongodb } = configure;
 for (const key of Object.keys(mongodb)) {
@@ -10,10 +11,31 @@ for (const key of Object.keys(mongodb)) {
 
 // plugins
 mongoose.plugin(schema => {
-  schema.statics.findForOp = async function(id) {
+  schema.statics.findForOp = async function(id, info) {
+    // Validate id
     if (!ObjectId.isValid(id)) throw new Error('Input ID is not a valid ID');
-    const item = await this.findById(id);
+
+    // Set fieldsName, populate path and select
+    let fieldsName = '';
+    let path = '';
+    let select = '';
+    if (info) {
+      const fields = graphqlFields(info);
+      for (const key of Object.keys(fields)) {
+        if (Object.keys(fields[key]).length === 0) {
+          fieldsName += key + ' ';
+        } else {
+          path = key;
+          select = '';
+          Object.keys(fields[key]).map(s => (select = select + s + ' '));
+        }
+      }
+    }
+    // Find item by id
+    const item = await this.findById(id, fieldsName).populate({ path, select });
+    // If item doesn't exist
     if (!item) throw new Error(`Document id '${id}' not exists`);
+
     return item;
   };
 });

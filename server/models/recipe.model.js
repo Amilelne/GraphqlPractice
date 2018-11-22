@@ -1,6 +1,7 @@
 const { conf } = require('../config');
 const mongoose = require('../mongoose');
 const Schema = mongoose.Schema;
+const { Material } = require('./material.model');
 
 const schema = new Schema(
   {
@@ -25,11 +26,13 @@ const schema = new Schema(
       min: 1,
       max: 5
     },
-    materials: {
-      type: [Schema.Types.ObjectId],
-      required: false,
-      default: []
-    }
+    materials: [
+      {
+        type: [Schema.Types.ObjectId],
+        required: false,
+        ref: 'Material'
+      }
+    ]
   },
   {
     timestamps: { createdAt: 'createDate', updatedAt: 'updateDate' },
@@ -39,7 +42,6 @@ const schema = new Schema(
 
 // Middleware
 schema.pre('save', async function() {
-  const { Material } = require('./material.model');
   if (this.isModified('materials')) {
     const materials = await Material.find({ _id: { $in: this.materials } });
     this.materials = materials.map(m => m._id);

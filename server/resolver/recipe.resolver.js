@@ -1,17 +1,26 @@
 const { Recipe } = require('../models/recipe.model');
 const { Material } = require('../models/material.model');
+const graphqlFields = require('graphql-fields');
 const resolverMap = {
-  Recipe: {
-    materials: async recipe => {
-      return Material.find({ _id: { $in: recipe.materials } });
-    }
-  },
   Query: {
-    recipes() {
-      return Recipe.find();
+    recipes: async (obj, args, context, info) => {
+      const fields = graphqlFields(info);
+      let fieldsName = '';
+      let path = '';
+      let select = '';
+      for (const key of Object.keys(fields)) {
+        if (Object.keys(fields[key]).length === 0) {
+          fieldsName += key + ' ';
+        } else {
+          path = key;
+          select = '';
+          Object.keys(fields[key]).map(s => (select = select + s + ' '));
+        }
+      }
+      return Recipe.find({}, fieldsName).populate({ path, select });
     },
-    recipe(_, { id }) {
-      return Recipe.findForOp(id);
+    recipe: async (_, { id }, context, info) => {
+      return Recipe.findForOp(id, info);
     }
   },
   Mutation: {
