@@ -16,7 +16,6 @@ const schema = new Schema(
 
 // Material
 schema.pre('remove', async function() {
-  console.log('trigger remove');
   const { Recipe } = require('./recipe.model');
   await Recipe.updateMany(
     { materials: this.id },

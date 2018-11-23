@@ -12,21 +12,18 @@ for (const key of Object.keys(mongodb)) {
 mongoose.plugin(schema => {
   schema.query.forGraphql = function(info) {
     let fieldsName = [];
-    if (info) {
-      const fields = graphqlFields(info);
-      for (const key of Object.keys(fields)) {
-        if (Object.keys(fields[key]).length === 0) {
-          fieldsName.push(key);
-        } else {
-          this.populate({
-            path: key,
-            select: Object.keys(fields[key]).join(' ')
-          });
-        }
+    const fields = graphqlFields(info);
+    for (const key of Object.keys(fields)) {
+      if (Object.keys(fields[key]).length === 0) {
+        fieldsName.push(key);
+      } else {
+        this.populate({
+          path: key,
+          select: Object.keys(fields[key]).join(' ')
+        });
       }
-      return this.select(fieldsName.join(' '));
     }
-    return this;
+    return this.select(fieldsName.join(' '));
   };
 });
 

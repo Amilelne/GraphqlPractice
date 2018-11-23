@@ -7,7 +7,7 @@ const resolverMap = {
   URL,
   Query: {
     appName: async (_, args, context, info) => {
-      console.log('Query.appName - info : ', JSON.stringify(info));
+      console.log(info);
       return 'I love cooking!';
     }
   }
