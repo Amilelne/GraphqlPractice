@@ -1,23 +1,9 @@
 const { Recipe } = require('../models/recipe.model');
 const { Material } = require('../models/material.model');
-const graphqlFields = require('graphql-fields');
 const resolverMap = {
   Query: {
     recipes: async (obj, args, context, info) => {
-      const fields = graphqlFields(info);
-      let fieldsName = '';
-      let path = '';
-      let select = '';
-      for (const key of Object.keys(fields)) {
-        if (Object.keys(fields[key]).length === 0) {
-          fieldsName += key + ' ';
-        } else {
-          path = key;
-          select = '';
-          Object.keys(fields[key]).map(s => (select = select + s + ' '));
-        }
-      }
-      return Recipe.find({}, fieldsName).populate({ path, select });
+      return Recipe.find().forGraphql(info);
     },
     recipe: async (_, { id }, context, info) => {
       return Recipe.findForOp(id, info);
@@ -25,16 +11,16 @@ const resolverMap = {
   },
   Mutation: {
     // recipe
-    addRecipe: async (_, { data }) => {
+    addRecipe: async (_, { data }, context, info) => {
       return Recipe.create(data);
     },
-    updateRecipe: async (_, { id, data }) => {
-      let recipe = await Recipe.findForOp(id);
+    updateRecipe: async (_, { id, data }, context, info) => {
+      let recipe = await Recipe.findForOp(id, info);
       Object.assign(recipe, data);
       return recipe.save();
     },
-    deleteRecipe: async (_, { id }) => {
-      let recipe = await Recipe.findForOp(id);
+    deleteRecipe: async (_, { id }, context, info) => {
+      let recipe = await Recipe.findForOp(id, info);
       return recipe.remove();
     }
   }

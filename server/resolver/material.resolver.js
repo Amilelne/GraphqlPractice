@@ -11,20 +11,20 @@ const resolverMap = {
       return Material.find();
     },
     material: async (_, { id }, context, info) => {
-      return Material.findForOp(id);
+      return Material.findForOp(id, info);
     }
   },
   Mutation: {
     // materials
     addMaterial: async (_, { data }) => Material.create(data),
-    updateMaterial: async (_, { id, data }) => {
+    updateMaterial: async (_, { id, data }, context, info) => {
       // Update Material
-      let material = await Material.findForOp(id);
+      let material = await Material.findForOp(id, info);
       Object.assign(material, data);
       return material.save();
     },
-    deleteMaterial: async (_, { id }) => {
-      let material = await Material.findForOp(id);
+    deleteMaterial: async (_, { id }, context, info) => {
+      let material = await Material.findForOp(id, info);
       await material.remove();
       return material;
     }
