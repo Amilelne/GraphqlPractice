@@ -1,0 +1,19 @@
+<form action="#" class="mx-auto">
+  <h1>Add Material</h1>
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input type="text" class="form-control" id="name" [formControl]="name" />
+  </div>
+  <button type="submit" class="btn btn-primary" (click)="newMaterial()">
+    Add
+  </button>
+  <div *ngIf="show == 'success'" class="alert alert-success mt-2" role="alert">
+    <span>Add new material succeeded!!! </span> <br />
+    <span>Id: {{ result.id }}</span
+    ><br />
+    <span>Name: {{ result.name }}</span>
+  </div>
+  <div *ngIf="show == 'error'" class="alert alert-danger mt-2" role="alert">
+    Add new material failed!!!
+  </div>
+</form>

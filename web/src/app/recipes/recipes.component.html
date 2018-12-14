@@ -1,0 +1,79 @@
+<div>
+  <a href="/addrecipe">
+    <fa-icon [icon]="faPlusCircle" class="fa-lg"></fa-icon>
+    <span>Add New Recipe</span></a
+  >
+</div>
+<div *ngIf="recipes">
+  <table class="table table-striped table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Id</th>
+        <th scope="col">
+          Title
+          <fa-icon
+            [icon]="faSort"
+            *ngIf="sortType != 'title'"
+            (click)="sortType = 'title'; sortReverse = true; sortQuery()"
+          ></fa-icon>
+          <fa-icon
+            [icon]="faCaretUp"
+            *ngIf="sortType == 'title' && !sortReverse"
+            (click)="sortReverse = !sortReverse; sortQuery()"
+          ></fa-icon>
+          <fa-icon
+            [icon]="faCaretDown"
+            *ngIf="sortType == 'title' && sortReverse"
+            (click)="sortReverse = !sortReverse; sortQuery()"
+          ></fa-icon>
+        </th>
+        <th scope="col">
+          Description
+          <fa-icon
+            [icon]="faSort"
+            *ngIf="sortType != 'description'"
+            (click)="sortType = 'description'; sortReverse = true; sortQuery()"
+          ></fa-icon>
+          <fa-icon
+            [icon]="faCaretUp"
+            *ngIf="sortType == 'description' && !sortReverse"
+            (click)="sortReverse = !sortReverse; sortQuery()"
+          ></fa-icon>
+          <fa-icon
+            [icon]="faCaretDown"
+            *ngIf="sortType == 'description' && sortReverse"
+            (click)="sortReverse = !sortReverse; sortQuery()"
+          ></fa-icon>
+        </th>
+        <th scope="col">
+          Difficult
+          <fa-icon
+            [icon]="faSort"
+            *ngIf="sortType != 'difficult'"
+            (click)="sortType = 'difficult'; sortReverse = true; sortQuery()"
+          ></fa-icon>
+          <fa-icon
+            [icon]="faCaretUp"
+            *ngIf="sortType == 'difficult' && !sortReverse"
+            (click)="sortReverse = !sortReverse; sortQuery()"
+          ></fa-icon>
+          <fa-icon
+            [icon]="faCaretDown"
+            *ngIf="sortType == 'difficult' && sortReverse"
+            (click)="sortReverse = !sortReverse; sortQuery()"
+          ></fa-icon>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let recipe of recipes">
+        <th scope="row">{{ recipes.indexOf(recipe) + 1 }}</th>
+        <td (click)="copy(recipe.id)" class="copyText">{{ recipe.id }}</td>
+        <td>{{ recipe.title }}</td>
+        <td>{{ recipe.description }}</td>
+        <td>{{ recipe.difficult }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

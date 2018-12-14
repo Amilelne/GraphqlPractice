@@ -1,0 +1,41 @@
+<div>
+  <a href="/addmaterial">
+    <fa-icon [icon]="faPlusCircle" class="fa-lg"></fa-icon>
+    <span>Add New Material</span></a
+  >
+</div>
+<div *ngIf="materials">
+  <table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Id</th>
+        <th scope="col">
+          Name
+          <fa-icon
+            [icon]="faSort"
+            *ngIf="sortType != 'name'"
+            (click)="sortType = 'name'; sortReverse = true; sortQuery()"
+          ></fa-icon>
+          <fa-icon
+            [icon]="faCaretUp"
+            *ngIf="sortType == 'name' && !sortReverse"
+            (click)="sortReverse = !sortReverse; sortQuery()"
+          ></fa-icon>
+          <fa-icon
+            [icon]="faCaretDown"
+            *ngIf="sortType == 'name' && sortReverse"
+            (click)="sortReverse = !sortReverse; sortQuery()"
+          ></fa-icon>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let material of materials">
+        <th scope="row">{{ materials.indexOf(material) + 1 }}</th>
+        <td>{{ material.id }}</td>
+        <td>{{ material.name }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
