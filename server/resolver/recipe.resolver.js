@@ -1,9 +1,24 @@
 const { Recipe } = require('../models/recipe.model');
 const { Material } = require('../models/material.model');
 const resolverMap = {
+  Material: {
+    recipes: async (material) => {
+      return await Recipe.find({ materials: material.id });
+    }
+  },
   Query: {
     recipes: async (obj, args, context, info) => {
-      return Recipe.find().forGraphql(info);
+      field =
+        args.orderBy && args.orderBy.split('_')[0]
+          ? args.orderBy.split('_')[0]
+          : 'createDate';
+      direct =
+        args.orderBy && args.orderBy.split('_')[1]
+          ? args.orderBy.split('_')[1].toLowerCase()
+          : 'asc';
+      return Recipe.find()
+        .sort({ [field]: direct })
+        .forGraphql(info);
     },
     recipe: async (_, { id }, context, info) => {
       return Recipe.findForOp(id, info);

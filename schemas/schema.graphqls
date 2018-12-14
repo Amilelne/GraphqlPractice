@@ -3,15 +3,18 @@ scalar DateTime
 # custom url link
 scalar URL
 
+type Subscription {
+  materialAdded: Material
+}
 type Query {
   # print the name of application, whatever you want
   appName: String!
 
   # recipe
-  recipes: [Recipe]! # get all
+  recipes(orderBy: recipeOrderByInput): [Recipe]! # get all
   recipe(id: ID!): Recipe! # get by id
   # materials
-  materials: [Material]! # get all
+  materials(orderBy: materialOrderByInput): [Material]! # get all
   material(id: ID!): Material! # get by id
 }
 
@@ -82,4 +85,27 @@ input CreateMaterialInput {
 
 input UpdateMaterialInput {
   name: String
+}
+
+# orderBy
+enum recipeOrderByInput {
+  title_ASC
+  title_DESC
+  description_ASC
+  description_DESC
+  difficult_ASC
+  difficult_DESC
+  updateDate_ASC
+  updateDate_DESC
+  createDate_ASC
+  createDate_DESC
+}
+
+enum materialOrderByInput {
+  name_ASC
+  name_DESC
+  updateDate_ASC
+  updateDate_DESC
+  createDate_ASC
+  createDate_DESC
 }

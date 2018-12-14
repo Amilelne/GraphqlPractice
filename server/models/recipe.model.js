@@ -16,8 +16,7 @@ const schema = new Schema(
       required: true
     },
     image: {
-      type: String,
-      required: true
+      type: String
     },
     difficult: {
       type: Number,
@@ -44,7 +43,7 @@ const schema = new Schema(
 schema.pre('save', async function() {
   if (this.isModified('materials')) {
     const materials = await Material.find({ _id: { $in: this.materials } });
-    this.materials = materials.map(m => m._id);
+    this.materials = materials.map((m) => m._id);
   }
 });
 const name = conf('collections.recipe');
