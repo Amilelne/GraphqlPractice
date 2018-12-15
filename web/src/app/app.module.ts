@@ -13,6 +13,12 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AddRecipeComponent } from './add-recipe/add-recipe.component';
 import { AddMaterialComponent } from './add-material/add-material.component';
 import { RouterModule, Routes } from '@angular/router';
+import { NgZorroAntdModule, NZ_I18N, en_US } from 'ng-zorro-antd';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { registerLocaleData } from '@angular/common';
+import en from '@angular/common/locales/en';
+
+registerLocaleData(en);
 
 const appRoutes: Routes = [
   { path: 'recipes', component: RecipesComponent },
@@ -39,9 +45,11 @@ const appRoutes: Routes = [
     NgbAlertModule,
     FontAwesomeModule,
     ReactiveFormsModule,
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
+    NgZorroAntdModule,
+    BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

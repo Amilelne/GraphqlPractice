@@ -32,6 +32,7 @@
     "core-js": "^2.5.4",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.10.0",
+    "ng-zorro-antd": "^7.0.0-rc.1",
     "ngx-clipboard": "^11.1.9",
     "rxjs": "~6.2.0",
     "zone.js": "~0.8.26"
