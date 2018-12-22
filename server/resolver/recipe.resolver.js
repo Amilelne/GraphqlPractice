@@ -27,6 +27,7 @@ const resolverMap = {
   Mutation: {
     // recipe
     addRecipe: async (_, { data }, context, info) => {
+      console.log(data);
       return Recipe.create(data);
     },
     updateRecipe: async (_, { id, data }, context, info) => {

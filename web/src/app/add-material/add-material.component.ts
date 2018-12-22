@@ -21,7 +21,10 @@ const addMaterial = gql`
   ]
 })
 export class AddMaterialComponent implements OnInit {
-  name = new FormControl('');
+  // name = new FormControl('');
+  model = {
+    name: ''
+  };
   show: string = 'false';
   result: Object;
 
@@ -35,7 +38,8 @@ export class AddMaterialComponent implements OnInit {
         mutation: addMaterial,
         variables: {
           data: {
-            name: this.name.value
+            // name: this.name.value
+            name: this.model.name
           }
         }
       })
@@ -43,7 +47,8 @@ export class AddMaterialComponent implements OnInit {
         ({ data }) => {
           this.show = 'success';
           this.result = data.addMaterial;
-          this.name.setValue('');
+          // this.name.setValue('');
+          this.model.name = '';
         },
         (error) => {
           this.show = 'error';

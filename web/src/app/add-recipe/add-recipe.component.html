@@ -1,20 +1,113 @@
-<form action="#" class="mx-auto">
+<form class="mx-auto" (ngSubmit)="onSubmit()" #recipeForm="ngForm">
   <h1>Add Recipe</h1>
   <div class="form-group">
     <label for="title">Title</label>
-    <input type="text" class="form-control" id="title" />
+    <input
+      type="text"
+      class="form-control"
+      id="title"
+      required
+      minlength="6"
+      [(ngModel)]="model.title"
+      name="title"
+      #title="ngModel"
+    />
+    <div
+      *ngIf="title.invalid && (title.dirty || title.touched)"
+      class="alert alert-danger"
+    >
+      <div *ngIf="title.errors.required"> Title is required! </div>
+      <div *ngIf="title.errors.minlength"
+        >Title must be at least 6 characters long
+      </div>
+    </div>
   </div>
   <div class="form-group">
     <label for="description">Description</label>
-    <input type="text" class="form-control" id="description" />
+    <input
+      type="text"
+      class="form-control"
+      id="description"
+      required
+      [(ngModel)]="model.description"
+      name="description"
+      #description="ngModel"
+    />
+    <div
+      *ngIf="description.invalid && (description.dirty || description.touched)"
+      class="alert alert-danger"
+    >
+      <div *ngIf="description.errors.required"> Description is required! </div>
+    </div>
   </div>
   <div class="form-group">
     <label for="image">Image</label>
-    <input type="text" class="form-control" id="image" />
+    <input
+      type="text"
+      class="form-control"
+      id="image"
+      [(ngModel)]="model.image"
+      name="image"
+      #image="ngModel"
+    />
+    <div
+      *ngIf="image.invalid && (image.dirty || image.touched)"
+      class="alert alert-danger"
+    >
+      <div *ngIf="image.errors.required"> Image is required! </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="difficult">Difficult</label>
+    <nz-select nzSize="large" required id="difficult" name="difficult">
+      <nz-option
+        *ngFor="let difficulty of listOfDifficulty"
+        [nzValue]="difficulty"
+        [nzLabel]="difficulty"
+      ></nz-option>
+    </nz-select>
+    <!--
+      <div
+        *ngIf="difficult.invalid && (difficult.dirty || difficult.touched)"
+        class="alert alert-danger"
+      >
+        <div *ngIf="difficult.errors.required"> Difficult is required! </div>
+      </div>
+    -->
   </div>
   <div class="form-group">
     <label for="material">Material</label>
-    <input type="text" class="form-control" id="material" />
+    <nz-select
+      [nzMaxMultipleCount]="3"
+      style="width: 100%"
+      nzMode="multiple"
+      nzPlaceHolder="Please select"
+      nzSize="large"
+      [(ngModel)]="model.listOfSelectedValue"
+      name="listOfSelectedValue"
+    >
+      <nz-option
+        *ngFor="let option of listOfOption"
+        [nzLabel]="option.name"
+        [nzValue]="option.id"
+      ></nz-option>
+    </nz-select>
   </div>
-  <button type="submit" class="btn btn-primary">Add</button>
+  <button
+    type="submit"
+    class="btn btn-primary"
+    [disabled]="!recipeForm.form.valid"
+    >Add
+  </button>
+  <div *ngIf="show == 'success'" class="alert alert-success mt-2" role="alert">
+    <span>Add new recipe succeeded!!! </span> <br />
+    <span>Id: {{ result.id }}</span
+    ><br />
+    <span>Title: {{ result.title }}</span
+    ><br />
+    <span>Description: {{ result.description }}</span>
+  </div>
+  <div *ngIf="show == 'error'" class="alert alert-danger mt-2" role="alert">
+    Add new recipe failed!!!
+  </div>
 </form>
