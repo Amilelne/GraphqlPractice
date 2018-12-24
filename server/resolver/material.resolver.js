@@ -19,13 +19,20 @@ const resolverMap = {
         args.orderBy && args.orderBy.split('_')[1]
           ? args.orderBy.split('_')[1].toLowerCase()
           : 'asc';
+      skip = args.skip ? args.skip : 0;
+      limit = args.limit ? args.limit : null;
       return Material.find()
         .sort({ [field]: direct })
+        .skip(skip)
+        .limit(limit)
         .forGraphql(info);
       // return Material.find();
     },
     material: async (_, { id }, context, info) => {
       return Material.findForOp(id, info);
+    },
+    materialSum: async (_, args, context, info) => {
+      return Material.estimatedDocumentCount();
     }
   },
   Mutation: {

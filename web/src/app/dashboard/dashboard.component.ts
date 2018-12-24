@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ProductService } from '../product.service';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
@@ -11,11 +11,20 @@ import gql from 'graphql-tag';
 export class DashboardComponent implements OnInit {
   constructor(private productService: ProductService, private apollo: Apollo) {}
 
+  model = {
+    search: ''
+  }
+
   ngOnInit() {}
 
   getMaterial() {
     this.productService
       .getMaterial()
       .subscribe((materials) => console.log(materials));
+  }
+
+  onSubmit(){
+    this.productService.eventEmit.emit(this.model.search);
+    this.model.search = '';
   }
 }

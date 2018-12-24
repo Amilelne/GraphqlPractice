@@ -11,11 +11,12 @@ type Query {
   appName: String!
 
   # recipe
-  recipes(orderBy: recipeOrderByInput): [Recipe]! # get all
+  recipes(orderBy: recipeOrderByInput, limit: Int, skip: Int): [Recipe]! # get all
   recipe(id: ID!): Recipe! # get by id
   # materials
-  materials(orderBy: materialOrderByInput): [Material]! # get all
+  materials(orderBy: materialOrderByInput, limit: Int, skip: Int): [Material]! # get all
   material(id: ID!): Material! # get by id
+  materialSum: Int!
 }
 
 type Mutation {

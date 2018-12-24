@@ -24,7 +24,8 @@ const appRoutes: Routes = [
   { path: 'recipes', component: RecipesComponent },
   { path: 'materials', component: MaterialsComponent },
   { path: 'addrecipe', component: AddRecipeComponent },
-  { path: 'addmaterial', component: AddMaterialComponent }
+  { path: 'addmaterial', component: AddMaterialComponent },
+  { path: '', component: RecipesComponent }
 ];
 
 @NgModule({
