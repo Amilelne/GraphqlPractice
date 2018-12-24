@@ -5,17 +5,14 @@ import { ArrayType } from '@angular/compiler';
   providedIn: 'root'
 })
 export class PaginationService {
-  public pageItem = 6;
+  public everyPageItem = 5;
   public pageNum;
   public pageArray: any[] = [];
 
   constructor() {}
 
   countPage(total) {
-    this.pageNum =
-      total % this.pageItem == 0
-        ? total / this.pageItem
-        : total / this.pageItem + 1;
+    this.pageNum = Math.ceil(total / this.everyPageItem);
     return this.pageNum;
   }
 

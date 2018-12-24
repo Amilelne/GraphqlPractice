@@ -67,7 +67,9 @@
     </thead>
     <tbody>
       <tr *ngFor="let recipe of recipes">
-        <th scope="row">{{ recipes.indexOf(recipe) + 1 }}</th>
+        <th scope="row">{{
+          recipes.indexOf(recipe) + 1 + (currentPage - 1) * everyPageItem
+        }}</th>
         <td (click)="copy(recipe.id)" class="copyText">{{ recipe.id }}</td>
         <td>{{ recipe.title }}</td> <td>{{ recipe.description }}</td>
         <td>{{ recipe.difficult }}</td>
@@ -76,17 +78,29 @@
   </table>
   <nav aria-label="Page Navigation">
     <ul class="pagination justify-content-center">
-      <li class="page-item">
-        <a class="page-link" href="#" aria-label="Previous">
+      <li class="page-item" [ngClass]="{ disabled: showPage[0] == 0 }">
+        <a
+          class="page-link"
+          (click)="changePage(-1)"
+          href="#"
+          aria-label="Previous"
+        >
           <span aria-hidden="true">&laquo;</span>
           <span class="sr-only">Previous</span>
         </a>
       </li>
-      <li class="page-item"><a class="page-link" href="#">1</a></li>
-      <li class="page-item"><a class="page-link" href="#">2</a></li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
-      <li class="page-item">
-        <a class="page-link" href="#" aria-label="Next">
+      <li
+        class="page-item"
+        *ngFor="let page of showPage.slice(1, -1)"
+        [ngClass]="{ active: page == currentPage }"
+      >
+        <a class="page-link" (click)="changePage(page)" href="#">{{ page }}</a>
+      </li>
+      <li
+        class="page-item"
+        [ngClass]="{ disabled: showPage.slice(-1)[0] == 0 }"
+      >
+        <a class="page-link" (click)="changePage(0)" href="#" aria-label="Next">
           <span aria-hidden="true">&raquo;</span>
           <span class="sr-only">Next</span>
         </a>

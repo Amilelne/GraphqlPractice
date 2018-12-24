@@ -16,12 +16,19 @@ const resolverMap = {
         args.orderBy && args.orderBy.split('_')[1]
           ? args.orderBy.split('_')[1].toLowerCase()
           : 'asc';
+      limit = args.limit ? args.limit : null;
+      skip = args.skip ? args.skip : 0;
       return Recipe.find()
+        .skip(skip)
+        .limit(limit)
         .sort({ [field]: direct })
         .forGraphql(info);
     },
     recipe: async (_, { id }, context, info) => {
       return Recipe.findForOp(id, info);
+    },
+    recipeSum: async (_, args, context, info) => {
+      return Recipe.estimatedDocumentCount();
     }
   },
   Mutation: {

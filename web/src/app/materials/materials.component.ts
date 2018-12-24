@@ -54,12 +54,11 @@ export class MaterialsComponent implements OnInit {
   ngOnInit() {
     this.sortType = 'name';
     this.sortReverse = true;
-    this.everyPageItem = this.paginationService.pageItem;
+    this.everyPageItem = this.paginationService.everyPageItem;
     this.apollo.watchQuery({
       query: MaterialSum
     }).valueChanges.subscribe((result) => {
       this.pageCount = this.paginationService.countPage((result.data as any).materialSum);
-      console.log(this.pageCount)
     });
 
     this.apollo
@@ -67,7 +66,7 @@ export class MaterialsComponent implements OnInit {
         query: Materials,
         variables: {
           orderBy: 'name_ASC',
-          limit: 6,
+          limit: this.paginationService.everyPageItem,
           skip: 0
         }
       })
@@ -75,7 +74,6 @@ export class MaterialsComponent implements OnInit {
         this.materials = (result.data as any).materials;
         this.currentPage = 1;
         this.showPage = this.paginationService.showPage(this.currentPage);
-        console.log(this.pageCount, this.showPage);
       });
   }
 
@@ -97,12 +95,13 @@ export class MaterialsComponent implements OnInit {
         query: Materials,
         variables: {
           orderBy: this.orderBy,
-          limit: this.paginationService.pageItem
+          limit: this.paginationService.everyPageItem
         }
       })
       .valueChanges.subscribe((result) => {
         this.materials = (result.data as any).materials;
       });
+    this.currentPage = 1;
   }
 
   changePage(page){
@@ -126,8 +125,8 @@ export class MaterialsComponent implements OnInit {
         query: Materials,
         variables: {
           orderBy: this.orderBy,
-          limit: 6,
-          skip: (this.currentPage - 1)*this.paginationService.pageItem
+          limit: this.paginationService.everyPageItem,
+          skip: (this.currentPage - 1)*this.paginationService.everyPageItem
         }
       })
       .valueChanges.subscribe((result) => {

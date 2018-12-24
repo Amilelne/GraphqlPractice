@@ -13,10 +13,11 @@ type Query {
   # recipe
   recipes(orderBy: recipeOrderByInput, limit: Int, skip: Int): [Recipe]! # get all
   recipe(id: ID!): Recipe! # get by id
+  recipeSum: Int! # get the sum of recipe records
   # materials
   materials(orderBy: materialOrderByInput, limit: Int, skip: Int): [Material]! # get all
   material(id: ID!): Material! # get by id
-  materialSum: Int!
+  materialSum: Int! # get the sum of material records
 }
 
 type Mutation {

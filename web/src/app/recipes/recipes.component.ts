@@ -8,6 +8,7 @@ import {
   faCaretDown,
   faPlusCircle
 } from '@fortawesome/free-solid-svg-icons';
+import { PaginationService } from '../pagination.service';
 
 enum recipeOrderByInput {
   title_ASC,
@@ -22,8 +23,8 @@ enum recipeOrderByInput {
   createDate_DESC
 }
 const Recipes = gql`
-  query Recipes($orderBy: recipeOrderByInput) {
-    recipes(orderBy: $orderBy) {
+  query Recipes($orderBy: recipeOrderByInput, $limit: Int, $skip: Int) {
+    recipes(orderBy: $orderBy, limit: $limit, skip: $skip) {
       id
       title
       image
@@ -32,6 +33,11 @@ const Recipes = gql`
     }
   }
 `;
+const RecipeSum = gql`
+  query recipeSum{
+    recipeSum
+  }
+`
 @Component({
   selector: 'app-recipes',
   templateUrl: './recipes.component.html',
@@ -47,24 +53,40 @@ export class RecipesComponent implements OnInit, OnDestroy {
   faCaretUp = faCaretUp;
   faCaretDown = faCaretDown;
   faPlusCircle = faPlusCircle;
+  pageCount;
+  showPage: any[] = [];
+  currentPage;
+  everyPageItem;
   private querySubscription: any;
   constructor(
     private apollo: Apollo,
-    private _clipboardService: ClipboardService
+    private _clipboardService: ClipboardService,
+    private paginationService: PaginationService
   ) {}
 
   ngOnInit() {
     this.sortType = 'title';
     this.sortReverse = true;
+    this.everyPageItem = this.paginationService.everyPageItem;
+    this.apollo.watchQuery({
+      query: RecipeSum
+    }).valueChanges.subscribe((result) => {
+      this.pageCount = this.paginationService.countPage((result.data as any).recipeSum);
+    });
+
     this.querySubscription = this.apollo
       .watchQuery({
         query: Recipes,
         variables: {
-          orderBy: 'title_ASC'
+          orderBy: 'title_ASC',
+          limit: this.paginationService.everyPageItem,
+          skip: 0
         }
       })
       .valueChanges.subscribe((result) => {
         this.recipes = (result.data as any).recipes;
+        this.currentPage = 1;
+        this.showPage = this.paginationService.showPage(this.currentPage);
       });
   }
 
@@ -78,16 +100,51 @@ export class RecipesComponent implements OnInit, OnDestroy {
       .watchQuery({
         query: Recipes,
         variables: {
-          orderBy: this.orderBy
+          orderBy: this.orderBy,
+          limit: this.paginationService.everyPageItem,
+          skip: 0
         }
       })
       .valueChanges.subscribe((result) => {
         this.recipes = (result.data as any).recipes;
       });
+    this.currentPage = 1;
   }
 
   copy(text: string) {
     this._clipboardService.copyFromContent(text);
+  }
+
+  changePage(page){
+    // Click previous button
+    if(page == -1){
+      if(this.currentPage >1 ){
+        this.currentPage = this.currentPage - 1;
+      }
+    }
+    // Click next button
+    else if(page == 0){
+      if(this.currentPage < this.pageCount){
+        this.currentPage = this.currentPage + 1;
+      }
+    }
+    else{
+      this.currentPage = page; 
+    }
+    this.apollo
+      .watchQuery({
+        query: Recipes,
+        variables: {
+          orderBy: this.orderBy,
+          limit: 6,
+          skip: (this.currentPage - 1)*this.paginationService.everyPageItem
+        }
+      })
+      .valueChanges.subscribe((result) => {
+        this.recipes = (result.data as any).recipes;
+        this.showPage = this.paginationService.showPage(this.currentPage);
+      });
+    return false;
   }
 
   ngOnDestroy() {
